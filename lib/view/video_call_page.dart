@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:videowithagora/utills/app_id.dart';
 
-import '../constant/constant_value.dart';
+import '../constant/constants.dart';
 
 class VideoCallPage extends StatefulWidget {
   const VideoCallPage({super.key});
@@ -41,28 +41,27 @@ class _VideoCallPageState extends State<VideoCallPage> {
     _engine.registerEventHandler(
       RtcEngineEventHandler(
         onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
-          debugPrint("local user ${connection.localUid} joined");
+          //debugPrint("local user ${connection.localUid} joined");
           setState(() {
             _localUid = connection.localUid;
             _localUserJoined = true;
           });
         },
         onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
-          debugPrint("remote user $remoteUid joined");
+          // debugPrint("remote user $remoteUid joined");
           setState(() {
             _remoteUid = remoteUid;
           });
         },
         onUserOffline: (RtcConnection connection, int remoteUid,
             UserOfflineReasonType reason) {
-          debugPrint("remote user $remoteUid left channel");
+          // debugPrint("remote user $remoteUid left channel");
           setState(() {
             _remoteUid = null;
           });
         },
         onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
-          debugPrint(
-              '[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
+          //    '[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
         },
       ),
     );
@@ -74,12 +73,14 @@ class _VideoCallPageState extends State<VideoCallPage> {
     // await _engine.joinChannel(
     //   token: token,
     //   channelId: channel,
-    //   uid: 0,
+    //   uid: _localUid,
     //   options: const ChannelMediaOptions(),
     // );
   }
 
   // Create UI with local view and remote view
+
+  var id;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -103,6 +104,9 @@ class _VideoCallPageState extends State<VideoCallPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
                         controller: textEditingController,
+                        onChanged: ((value) {
+                          id = int.parse(value);
+                        }),
                       ),
                     ),
                     ElevatedButton(
@@ -110,7 +114,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
                           _engine.joinChannel(
                               token: token,
                               channelId: channel,
-                              uid: 4029418116,
+                              uid: id,
                               options: const ChannelMediaOptions());
                         },
                         child: Text(ConstantValue.BUTTON_TEXT))
@@ -144,7 +148,6 @@ class _VideoCallPageState extends State<VideoCallPage> {
     //4029418116 remote
     //2000527644 local
     if (_remoteUid != null) {
-      print("local id $_localUid");
       return AgoraVideoView(
         controller: VideoViewController.remote(
           rtcEngine: _engine,
