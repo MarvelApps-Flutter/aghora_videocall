@@ -4,6 +4,7 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:videowithagora/utills/app_id.dart';
+import 'package:videowithagora/view/splash_page.dart';
 import 'package:videowithagora/view/video_call_page.dart';
 
 void main() => runApp(const MyApp());
@@ -20,7 +21,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: VideoCallPage(),
+      home: SplashPage(),
     );
   }
 }
